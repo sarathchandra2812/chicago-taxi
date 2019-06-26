@@ -1,4 +1,5 @@
-# chicago-taxi
+# Predicting Chicago Taxi Fare
+
 ## Purpose of the Model
 This model uses the Chicago Taxi Trip dataset. (https://www.kaggle.com/chicago/chicago-taxi-trips-bq)  
 
@@ -65,13 +66,7 @@ The features below were generated:
 
 # Modeling
 
-Two models were used to model the data for comparison: XGBoost and Regression on Tensorflow. These two models were chosen because: (1) they were applicable to the question; (2) they were top performers for regression problems; (3) they could be applied to large datasets.
-
-For both models, data that had mileage per hour (mph) of 90 or above, or the trip miles is above 300, or the fare is above 4 standard deviations, were removed. 
-
-Root Mean Squared Error (RMSE) and Mean Average Error (MAE) were used for evaluation.
-
-## Input Features
+## Input
 - pickup_latitude
 - pickup_longitude
 - dropoff_latitude
@@ -80,11 +75,13 @@ Root Mean Squared Error (RMSE) and Mean Average Error (MAE) were used for evalua
 - is_luxury(if the company tend to provide premium services)
 - k2(cluster of the driver based on the clustering results)
 
+Data that had mileage per hour (mph) of 90 or above, or the trip miles is above 300, or the fare is above 4 standard deviations, were removed. 
+
 ## Estimator: DNNLinearCombinedRegressor
 The estimator used is DNNLinearCombinedRegressor from the tensorflow.estimator. This built-in estimator fits the use of this model and make it easy to use.
 
 ## Tuning Hyperparametesr using Hypertune
-We used Hypertune to tune parameters. 
+We used Hypertune to tune parameters. The goal is to minimize the Root Mean Squared Error (RMSE).
 The job ID is taxi_fare_model_43. 
 
 ~~~~
@@ -123,7 +120,6 @@ request = ml.projects().jobs().get(name=job_id).execute()
 best_model = request['trainingOutput']['trials'][0]
 print('Best Hyperparameters:')
 print(json.dumps(best_model, indent=4))
-
 ~~~~
 
 ## Deployment and Predictions
@@ -143,3 +139,9 @@ The job for prediction is taxi_fare_model_45.
     --version=v1
 ~~~~
 ![alt text](images/github_2.PNG)
+![alt text](images/github_3.PNG)
+
+
+# Reference
+https://github.com/GoogleCloudPlatform/professional-services/tree/master/examples/cloudml-energy-price-forecasting
+
