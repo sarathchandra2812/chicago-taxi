@@ -1,7 +1,4 @@
 # chicago-taxi
-
-# chicago-taxi-fare
-
 ## Purpose of the Model
 This model uses the Chicago Taxi Trip dataset. (https://www.kaggle.com/chicago/chicago-taxi-trips-bq)  
 
@@ -129,12 +126,11 @@ print(json.dumps(best_model, indent=4))
 
 ~~~~
 
-## Deploying the Model on AI Platform
+## Deployment and Predictions
 The model used is taxi_fare_forecast_3, v1.
 
 ![alt text](images/github_1.PNG)
 
-## Testing and Evaluation
 The job for prediction is taxi_fare_model_45. 
 ~~~~
 !gcloud ml-engine jobs submit prediction taxi_fare_model_45 \
