@@ -126,6 +126,7 @@ print(json.dumps(best_model, indent=4))
 The model used is taxi_fare_forecast_3, v1.
 
 ![alt text](images/github_1.PNG)
+![alt text](images/github_3.PNG)
 
 The job for prediction is taxi_fare_model_45. 
 ~~~~
@@ -139,7 +140,6 @@ The job for prediction is taxi_fare_model_45.
     --version=v1
 ~~~~
 ![alt text](images/github_2.PNG)
-![alt text](images/github_3.PNG)
 
 
 # Reference
