@@ -121,12 +121,13 @@ best_model = request['trainingOutput']['trials'][0]
 print('Best Hyperparameters:')
 print(json.dumps(best_model, indent=4))
 ~~~~
+![alt text](images/github_3.PNG)
+
 
 ## Deployment and Predictions
 The model used is taxi_fare_forecast_3, v1.
 
 ![alt text](images/github_1.PNG)
-![alt text](images/github_3.PNG)
 
 The job for prediction is taxi_fare_model_45. 
 ~~~~
