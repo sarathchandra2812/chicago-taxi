@@ -55,14 +55,15 @@ Analysis of the dollars per mile for each company showed a clear cut off among c
 
 ##  Summary of Relevant Features
 The features below were generated:
-1. When extracting data from Big Query:
-        - Transforming the pickup and drop off data time from UTC to Chicago local
-               - Extracting the date, hour of the day, day of the week, month and year from the pickup datetime
-               - Calculating the duration of the trip using beginning and ending time
-               - Marking trips that started or ended in an airport based on the community areas
-2. In Jupyter Notebook
-        - Marking the service level, premium vs regular, of each driver based on the clustering results
-        - Marking the service level of the company based on the dollars per mile of the trips provided in the past
+When extracting data from Big Query:
+- Transforming the pickup and drop off data time from UTC to Chicago local
+- Extracting the date, hour of the day, day of the week, month and year from the pickup datetime
+- Calculating the duration of the trip using beginning and ending time
+- Marking trips that started or ended in an airport based on the community areas
+
+In Jupyter Notebook:
+- Marking the service level, premium vs regular, of each driver based on the clustering results
+- Marking the service level of the company based on the dollars per mile of the trips provided in the past
 
 # Modeling
 
@@ -81,8 +82,9 @@ Data that had mileage per hour (mph) of 90 or above, or the trip miles is above 
 The estimator used is DNNLinearCombinedRegressor from the tensorflow.estimator. This built-in estimator fits the use of this model and make it easy to use.
 
 ## Tuning Hyperparametesr using Hypertune
-We used Hypertune to tune parameters. The goal is to minimize the Root Mean Squared Error (RMSE).
-The job ID is taxi_fare_model_49. 
+We used Hypertune to tune the number of nodes in each layer. The goal is to minimize the Root Mean Squared Error (RMSE). The parameters are set in the config.yaml file.
+
+The job for hypertuning is taxi_fare_model_49. 
 
 ~~~~
 !gcloud ml-engine jobs submit training taxi_fare_model_49\
