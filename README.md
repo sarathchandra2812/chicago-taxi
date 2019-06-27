@@ -82,11 +82,11 @@ The estimator used is DNNLinearCombinedRegressor from the tensorflow.estimator. 
 
 ## Tuning Hyperparametesr using Hypertune
 We used Hypertune to tune parameters. The goal is to minimize the Root Mean Squared Error (RMSE).
-The job ID is taxi_fare_model_43. 
+The job ID is taxi_fare_model_49. 
 
 ~~~~
-!gcloud ml-engine jobs submit training taxi_fare_model_43\
-        --job-dir=gs://taxi_fare_3/job_folder/taxi_fare_model_43\
+!gcloud ml-engine jobs submit training taxi_fare_model_49\
+        --job-dir=gs://taxi_fare_3/job_folder/taxi_fare_model_49\
         --runtime-version=1.10 \
         --region=us-central1 \
         --module-name=trainer.task \
@@ -105,9 +105,9 @@ import json
 #credentials = service_account.Credentials.from_service_account_file(<PATH TO CREDENTIALS JSON>)
 
 # Define the project id and the job id and format it for the api request
-profect_id_name = 'hackathon1-183523'
+profect_id_name = ''
 project_id = 'projects/{}'.format(profect_id_name)
-job_name = 'taxi_fare_model_43'
+job_name = 'taxi_fare_model_49'
 job_id = '{}/jobs/{}'.format(project_id, job_name)
 
 # Build the service
@@ -125,24 +125,25 @@ print(json.dumps(best_model, indent=4))
 
 
 ## Deployment and Predictions
-The model used is taxi_fare_forecast_3, v1.
+The model used is taxi_fare_forecast_3, v2.
 
 ![alt text](images/github_1.PNG)
 
 The job for prediction is taxi_fare_model_45. 
 ~~~~
-!gcloud ml-engine jobs submit prediction taxi_fare_model_45 \
+!gcloud ml-engine jobs submit prediction taxi_fare_model_54 \
     --model=taxi_fare_forecast_3 \
     --input-paths=gs://taxi_fare_3/data/csv/test.csv \
     --output-path=gs://taxi_fare_3/data/prediction_output/ \
     --region=us-central1 \
     --data-format=TEXT \
     --signature-name=predict \
-    --version=v1
+    --version=v2
 ~~~~
 ![alt text](images/github_2.PNG)
 
 
 # Reference
-https://github.com/GoogleCloudPlatform/professional-services/tree/master/examples/cloudml-energy-price-forecasting
+1. Google Cloud Platform: https://github.com/GoogleCloudPlatform/professional-services/tree/master/examples/cloudml-energy-price-forecasting
 
+2. Kaggle: https://www.kaggle.com/chicago/chicago-taxi-trips-bq
