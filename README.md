@@ -98,11 +98,15 @@ The job for hypertuning is training taxi_fare_5.
 
 The job shows the hyperparameters and the performance indicator: rmse.
 
-<img src="/images/github_hypertune.PNG" width="200">
+
+<img src="/images/github_hypertune.PNG" width="600">
+
 
 The logs are saved in a cloud bucket:
 
-![screenshot](images/github_hypertune_log.PNG)
+
+<img src="/images/github_hypertune_log.PNG" width="600">
+
 
 To check the results to see which model is the best:
 ~~~~
@@ -125,7 +129,9 @@ request = ml.projects().jobs().get(name=job_id).execute()
 # The best model
 request['trainingOutput']['trials'][0]
 ~~~~
-![alt text](images/github_best_results.PNG)
+
+
+<img src="/images/github_best_results.PNG" width="600">
 
 
 ## Deployment and Predictions
@@ -144,10 +150,15 @@ The job for prediction is taxi_fare_model_45.
     --version=v4
 ~~~~
 
-![alt text](images/github_pred_job.PNG)
+
+<img src="/images/github_pred_job.PNG" width="600">
+
 
 If we click the job, we will see:
-![alt text](images/github_pred_job_details.PNG)
+
+
+<img src="/images/github_pred_job_details.PNG" width="600">
+
 
 ## Results
 
@@ -175,7 +186,9 @@ from math import sqrt
 rmse = sqrt(mean_squared_error(results, test.fare_dollars))
 print('RMSE is: ', rmse)
 ~~~~
-![alt text](images/github_rmse.PNG)
+
+
+<img src="/images/github_rmse.PNG" width="400">
 
 
 
