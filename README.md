@@ -84,11 +84,11 @@ The estimator used is DNNLinearCombinedRegressor from the tensorflow.estimator. 
 ## Tuning Hyperparametesr using Hypertune
 We used Hypertune to tune the number of nodes in each layer. The goal is to minimize the Root Mean Squared Error (RMSE). The parameters are set in the config.yaml file.
 
-The job for hypertuning is taxi_fare_model_49. 
+The job for hypertuning is training taxi_fare_5. 
 
 ~~~~
-!gcloud ml-engine jobs submit training taxi_fare_model_49\
-        --job-dir=gs://taxi_fare_3/job_folder/taxi_fare_model_49\
+!gcloud ml-engine jobs submit training taxi_fare_5\
+        --job-dir=gs://taxi_fare_4/job_folder/taxi_fare_model_5\
         --runtime-version=1.10 \
         --region=us-central1 \
         --module-name=trainer.task \
@@ -96,20 +96,24 @@ The job for hypertuning is taxi_fare_model_49.
         --config=config.yaml
 ~~~~
 
-To check the reuslts: 
+The job shows the hyperparameters and the performance indicator: rmse.
+
+![alt text](images/github_hypertune.PNG)
+
+The logs are saved in a cloud bucket:
+
+![alt text](images/github_hypertune_log.PNG)
+
+To check the results to see which model is the best:
 ~~~~
 from googleapiclient import discovery
 from google.oauth2 import service_account
 import pandas as pd
 import json
 
-# Define the credentials for the service account
-#credentials = service_account.Credentials.from_service_account_file(<PATH TO CREDENTIALS JSON>)
-
-# Define the project id and the job id and format it for the api request
-profect_id_name = ''
+profect_id_name = 'hackathon1-183523'
 project_id = 'projects/{}'.format(profect_id_name)
-job_name = 'taxi_fare_model_49'
+job_name = 'taxi_fare_5'
 job_id = '{}/jobs/{}'.format(project_id, job_name)
 
 # Build the service
@@ -118,31 +122,61 @@ ml = discovery.build('ml', 'v1')
 # Execute the request and pass in the job id
 request = ml.projects().jobs().get(name=job_id).execute()
 
-# Get just the best hp values
-best_model = request['trainingOutput']['trials'][0]
-print('Best Hyperparameters:')
-print(json.dumps(best_model, indent=4))
+# The best model
+request['trainingOutput']['trials'][0]
 ~~~~
-![alt text](images/github_3.PNG)
+![alt text](images/github_best_results.PNG)
 
 
 ## Deployment and Predictions
-The model used is taxi_fare_forecast_3, v2.
-
-![alt text](images/github_1.PNG)
+The model used is taxi_fare_forecast_3, v4.
+The job name for the prediction is taxi_fare_pred_4
 
 The job for prediction is taxi_fare_model_45. 
 ~~~~
-!gcloud ml-engine jobs submit prediction taxi_fare_model_54 \
+!gcloud ml-engine jobs submit prediction taxi_fare_pred_4 \
     --model=taxi_fare_forecast_3 \
-    --input-paths=gs://taxi_fare_3/data/csv/test.csv \
-    --output-path=gs://taxi_fare_3/data/prediction_output/ \
+    --input-paths=gs://taxi_fare_4/data/csv/test.csv \
+    --output-path=gs://taxi_fare_4/data/prediction_output/ \
     --region=us-central1 \
     --data-format=TEXT \
     --signature-name=predict \
-    --version=v2
+    --version=v4
 ~~~~
-![alt text](images/github_2.PNG)
+
+![alt text](images/github_pred_job.PNG)
+
+If we click the job, we will see:
+![alt text](images/github_pred_job_details.PNG)
+
+## Results
+
+Download the results and transform it into a dataframe.
+
+~~~~
+! gsutil cp gs://taxi_fare_4/data/prediction_output/prediction.results-00000-of-00001 pred_results.json
+   
+results_ls = []
+for line in open('pred_results.txt', 'r'):
+    results_ls.append(json.loads(line))
+    
+results = []
+for item in results_ls:
+    for data_item in item['predictions']:
+        results.append(data_item)
+~~~~
+
+Calculate the rmse of the predicted results and actual data.
+
+~~~~
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+rmse = sqrt(mean_squared_error(results, test.fare_dollars))
+print('RMSE is: ', rmse)
+~~~~
+![alt text](images/github_rmse.PNG)
+
 
 
 # Reference
