@@ -16,10 +16,6 @@ SHUFFLE_BUFFER_SIZE = 200
 
 def parse_csv(record):
     """This function parses the .csv file
-    Args:
-        record: String representation of the record.
-    Returns:
-        A dictionary with all column names and values for the record.
     """
     column_names = ['hour', 
                     'weekday',
@@ -31,13 +27,13 @@ def parse_csv(record):
                     'is_luxury', 
                     'fare_dollars']
     
-    header_def=[[0], [''], [0.0], [0.0], [0.0], [0.0], [0], [0], [0.0]]
-    columns = tf.decode_csv(record, record_defaults=header_def)
+    header=[[0], [''], [0.0], [0.0], [0.0], [0.0], [0], [0], [0.0]]
+    columns = tf.decode_csv(record, record_defaults=header)
 
     return dict(zip(column_names, columns))
 
 
-def get_features_target_tuple(features):
+def get_features_target(features):
     """
     This function returns the features and target
     """
@@ -56,12 +52,8 @@ def generate_input_fn(file_path, shuffle, batch_size, num_epochs):
         num_threads = multiprocessing.cpu_count()
         dataset = tf.data.TextLineDataset(filenames=[file_path])
         dataset = dataset.skip(1)
-        dataset = dataset.map(lambda x: parse_csv(
-            tf.expand_dims(x, -1)), num_parallel_calls=num_threads)
-        dataset = dataset.map(get_features_target_tuple,
-                              num_parallel_calls=num_threads)
-        if shuffle:
-            dataset = dataset.shuffle(SHUFFLE_BUFFER_SIZE)
+        dataset = dataset.map(lambda x: parse_csv(tf.expand_dims(x, -1)), num_parallel_calls=num_threads)
+        dataset = dataset.map(get_features_target, num_parallel_calls=num_threads)
         dataset = dataset.batch(batch_size)
         dataset = dataset.repeat(num_epochs)
         dataset = dataset.prefetch(1)
@@ -71,23 +63,39 @@ def generate_input_fn(file_path, shuffle, batch_size, num_epochs):
     return _input_fn
 
 
+# def generate_input_fn(file_path, shuffle, batch_size, num_epochs):
+#     """
+#     This function preps data input.
+#     """
+#     num_threads = multiprocessing.cpu_count()
+#     dt = tf.data.TextLineDataset(filenames=[file_path])
+#     dt = dt.skip(1)
+#     dt = dt.map(lambda x: parse_csv(tf.expand_dims(x, -1)), num_parallel_calls=num_threads)
+#     dt = dt.map(get_features_target, num_parallel_calls=num_threads)
+#     dt = dt.batch(batch_size)
+#     dt = dt.repeat(num_epochs)
+#     dt = dt.prefetch(1)
+#     iterator = dt.make_one_shot_iterator()
+#     features, target = iterator.get_next()
+    
+#     return features, target
+
+
 def csv_serving_input_fn():
     """
     This function creates a ServingInputReceiver.
     """
-    csv_row = tf.placeholder(
-        dtype=tf.string
-    )
+    csv_row = tf.placeholder(dtype=tf.string)
 
     features = parse_csv(csv_row)
-    features, _ = get_features_target_tuple(features)
+    features, _ = get_features_target(features)
 
     return tf.estimator.export.ServingInputReceiver(
         features=features,
         receiver_tensors={'csv_row': csv_row})
 
 
-def get_train_spec(training_path, batch_size, max_steps):
+def train_spec(training_path, batch_size, max_steps):
     """
     This function creates a TrainSpec for the estimator
     """
@@ -99,7 +107,7 @@ def get_train_spec(training_path, batch_size, max_steps):
             num_epochs=None),
         max_steps=max_steps)
 
-def get_eval_spec(validation_path, batch_size):
+def eval_spec(validation_path, batch_size):
     """
     This function creates an EvalSpec for the estimaor.
     """

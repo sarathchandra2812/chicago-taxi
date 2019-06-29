@@ -3,7 +3,6 @@
 
 # In[22]:
 
-
 # This document follows Google's published example: 
 # https://github.com/GoogleCloudPlatform/professional-services/tree/master/examples/cloudml-energy-price-forecasting
 # ==============================================================================
@@ -81,11 +80,9 @@ def create_regressor(config, parameters):
     )
     
     def rmse(labels, predictions):
-        pred_values = tf.cast(predictions['predictions'], tf.float32)
+        pred_values = predictions['predictions']
         return {'rmse': tf.metrics.root_mean_squared_error(labels, pred_values)}
 
-    estimator = tf.contrib.estimator.add_metrics(
-        estimator, rmse)
+    estimator = tf.contrib.estimator.add_metrics(estimator, rmse)
 
     return estimator
-

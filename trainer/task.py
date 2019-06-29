@@ -14,9 +14,7 @@ This file sets the parameters and runs the model.
 
 import sys; sys.argv=['']; del sys
 
-import argparse
-import json
-import os
+import argparse, json, os
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -24,7 +22,7 @@ import inputs
 import model
 
 
-def initialise_params():
+def initialize_params():
     """
     Sets parameters
     """
@@ -33,12 +31,12 @@ def initialise_params():
     args_parser.add_argument(
         '--training_path',
         help='Location to training data.',
-        default='gs://taxi_fare_3/data/csv/train.csv' 
+        default='gs://taxi_fare_4/data/csv/train.csv' 
     )
     args_parser.add_argument(
         '--validation_path',
         help='Location to validation data.',
-        default='gs://taxi_fare_3/data/csv/eval.csv'
+        default='gs://taxi_fare_4/data/csv/eval.csv'
     )
     args_parser.add_argument(
         '--hidden1',
@@ -68,11 +66,6 @@ def initialise_params():
         type=int
     )
     args_parser.add_argument(
-        '--hidden_units',
-        help='Training batch size.',
-        default=[128, 32, 4]
-    )
-    args_parser.add_argument(
         '--eval_batch_size',
         help='Evaluation batch size.',
         default=168,
@@ -99,12 +92,13 @@ def run_experiment(run_config, parameters):
     This funtion runs the tensorflow model.
     """
     estimator = model.create_regressor(
-        config = run_config, parameters=parameters)
-    train_spec = inputs.get_train_spec(
+        config = run_config, 
+        parameters=parameters)
+    train_spec = inputs.train_spec(
         parameters.training_path,
         parameters.batch_size,
         parameters.max_steps)
-    eval_spec = inputs.get_eval_spec(
+    eval_spec = inputs.eval_spec(
         parameters.validation_path,
         parameters.eval_batch_size)
 
@@ -119,19 +113,15 @@ def main():
     """
     This main function executes the job.
     """
-    parameters = initialise_params()
+    parameters = initialize_params()
     tf.logging.set_verbosity(tf.logging.INFO)
-
-    model_dir = 'gs://taxi_fare_3/log/'
         
     run_config = tf.estimator.RunConfig(
-        log_step_count_steps=1000,
-        save_checkpoints_secs=120,
-        keep_checkpoint_max=3,
-        model_dir=model_dir
+        log_step_count_steps=500,
+        save_checkpoints_secs=60,
+        model_dir='gs://taxi_fare_4/log/'
     )
     run_experiment(run_config, parameters)
-
 
 if __name__ == '__main__':
     main()

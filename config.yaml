@@ -1,0 +1,25 @@
+trainingInput:
+  scaleTier: STANDARD_1
+  hyperparameters:
+    goal: MINIMIZE
+    hyperparameterMetricTag: rmse
+    enableTrialEarlyStopping: True
+    maxTrials: 12
+    maxParallelTrials: 4
+    params:
+    - parameterName: hidden1
+      type: DISCRETE
+      discreteValues:
+          - 128
+          - 160
+          - 256
+    - parameterName: hidden2
+      type: DISCRETE
+      discreteValues:
+          - 64
+          - 96
+    - parameterName: hidden3
+      type: DISCRETE
+      discreteValues:
+          - 16
+          - 32
