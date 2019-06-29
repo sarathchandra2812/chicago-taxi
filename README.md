@@ -99,10 +99,11 @@ The job for hypertuning is training taxi_fare_5.
 The job shows the hyperparameters and the performance indicator: rmse.
 
 ![screenshot](/images/github_hypertune.PNG)
+<img src="/images/github_hypertune.PNG" width="100">
 
 The logs are saved in a cloud bucket:
 
-![alt text](images/github_hypertune_log.PNG=100x20)
+![screenshot](images/github_hypertune_log.PNG)
 
 To check the results to see which model is the best:
 ~~~~
