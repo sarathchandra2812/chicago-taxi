@@ -8,6 +8,9 @@ The goal of this project is to predict the fare price at the beginning of the ri
 Predicting the fare serves two purposes: First, it gives the passengers an expectation of the fare. Second, it prevents the meters’ mistakes in calculating the fare. In the dataset, we have seen impossible data, which could cause mistakes in fare calculations. For example,one trip was 15 minutes in duration but the distance traveled was 2000+ miles. The predicted fares could be used as a benchmark to evaluate the meters’ fares calculated to prevent mistakes. 
 
 ## Data Exploration and Data Analysis
+
+The .ipynb file for data analysis： /exploratory-analysis/chicago-taxi-fare-exploratory-analysis.ipynb 
+
 ### Data Sample
 1M rows of data were extracted from Big Query using SQL. Apparently, the more data the better. However, since the purpose of this project is to evaluate the methodology, we only used a subset of the data in order to cut down costs.  
 
