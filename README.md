@@ -123,10 +123,8 @@ project_id = 'projects/{}'.format(profect_id_name)
 job_name = 'taxi_fare_5'
 job_id = '{}/jobs/{}'.format(project_id, job_name)
 
-# Build the service
+# Build the service and make a request
 ml = discovery.build('ml', 'v1')
-
-# Execute the request and pass in the job id
 request = ml.projects().jobs().get(name=job_id).execute()
 
 # The best model
