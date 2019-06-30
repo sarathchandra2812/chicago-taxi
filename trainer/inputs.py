@@ -63,24 +63,6 @@ def generate_input_fn(file_path, shuffle, batch_size, num_epochs):
     return _input_fn
 
 
-# def generate_input_fn(file_path, shuffle, batch_size, num_epochs):
-#     """
-#     This function preps data input.
-#     """
-#     num_threads = multiprocessing.cpu_count()
-#     dt = tf.data.TextLineDataset(filenames=[file_path])
-#     dt = dt.skip(1)
-#     dt = dt.map(lambda x: parse_csv(tf.expand_dims(x, -1)), num_parallel_calls=num_threads)
-#     dt = dt.map(get_features_target, num_parallel_calls=num_threads)
-#     dt = dt.batch(batch_size)
-#     dt = dt.repeat(num_epochs)
-#     dt = dt.prefetch(1)
-#     iterator = dt.make_one_shot_iterator()
-#     features, target = iterator.get_next()
-    
-#     return features, target
-
-
 def csv_serving_input_fn():
     """
     This function creates a ServingInputReceiver.
