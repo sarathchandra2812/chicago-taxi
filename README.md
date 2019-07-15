@@ -26,10 +26,57 @@ Thanks to Big Query’s powerful functions, some new features were created durin
 - Calculating the duration of the trip using beginning and ending time
 - Marking trips that started or ended in an airport based on the community areas
 
+~~~
+# Pull data and feature engineering 
+# The training data set will include 1M rows
+# Feature engineering to generate new columns: 
+#Year, Date, Hour, Weekday of the trip, whether the trip starts or end in an airport, duration of the trip in minutes.
+
+sql="""
+with tmp_tb as (
+SELECT
+    unique_key, 
+    taxi_id, 
+    DATETIME(trip_start_timestamp, 'America/Chicago') trip_start_timestamp, 
+    DATETIME(trip_end_timestamp, 'America/Chicago') trip_end_timestamp, 
+    trip_miles, 
+    pickup_census_tract, 
+    dropoff_census_tract, 
+    pickup_community_area, 
+    dropoff_community_area, 
+    payment_type, 
+    company, 
+    pickup_latitude, 
+    pickup_longitude, 
+    dropoff_latitude, 
+    dropoff_longitude,
+    fare fare_dollars
+FROM
+    `bigquery-public-data.chicago_taxi_trips.taxi_trips` 
+WHERE 
+    fare > 0 and fare is not null and trip_miles > 0 and trip_miles is not null
+ORDER BY 
+    RAND()
+LIMIT 1000000)
+SELECT *, 
+    CAST(trip_start_timestamp AS DATE) trip_start_dt,
+    CAST(trip_end_timestamp AS DATE) trip_end_dt,
+    DATETIME_DIFF(trip_end_timestamp, trip_start_timestamp, MINUTE) trip_minutes,
+    EXTRACT(YEAR FROM trip_start_timestamp) year,
+    EXTRACT(MONTH FROM trip_start_timestamp) month,
+    EXTRACT(DAY FROM trip_start_timestamp) day,
+    EXTRACT(HOUR FROM trip_start_timestamp) hour,
+    FORMAT_DATE('%a', DATE(trip_start_timestamp)) weekday,
+    CASE WHEN (pickup_community_area IN (56, 64, 76)) OR (dropoff_community_area IN (56, 64, 76)) THEN 1 else 0 END is_airport
+FROM tmp_tb
+"""
+
+df = client.query(sql).to_dataframe()
+~~~
+
 ### General Exploration of the Data
 This step helps us understand:
 - data types of each column
-- descriptive analysis of each column (e.g., mean, standard deviation and max value)
 - number of missing values for each column and across the dataset.
 - the statistical properties of the columns, such as its distribution. 
 - the outliers or implausible data, such as trips with duration of 15 minutes but distance of 1000+ miles which suggested that additional data filtering was needed. 
