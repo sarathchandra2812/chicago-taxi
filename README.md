@@ -81,6 +81,23 @@ This step helps us understand:
 - the statistical properties of the columns, such as its distribution. 
 - the outliers or implausible data, such as trips with duration of 15 minutes but distance of 1000+ miles which suggested that additional data filtering was needed. 
 
+~~~
+df.dtypes
+~~~
+<img src="/images/github_dtype.PNG" width="600">
+
+~~~
+df.describe()
+~~~
+<img src="/images/github_describe.PNG" width="600">
+
+~~~
+# missing values
+print(df.isnull().sum())
+~~~
+<img src="/images/github_missing_values.PNG" width="600">
+
+
 ### Explore the Relationships Among Metrics
 This step aimed to explore the relationships between different columns, including the relationships between different columns and fare.
 
@@ -93,6 +110,40 @@ Two conclusions came out of this analysis:
 2. There seemed to be two lines of services: premium services and regular services, based on the rates. 
 
 Because of  the second conclusion, the next step was to figure out how to determine the type of services for each ride. 
+
+
+~~~
+# make a copy of the original data
+df_2 = df.copy()
+
+## Check how many rides are share rides. Include only non-shared rides
+# If two unique_key have the same taxi_id and trip_start_timestamp, it is considered a shared ride
+
+aggregations = {
+    'unique_key':{
+        'passengers': 'count'
+    },
+    'fare_dollars':{
+        'max_fare': 'max', 
+        'min_fare': 'min'
+    }   
+}
+
+df_share_rides = df_2[['unique_key', 'taxi_id', 'trip_start_timestamp', 'fare_dollars']].groupby(['taxi_id', 'trip_start_timestamp']).agg(aggregations)
+df_share_rides.columns = df_share_rides.columns.get_level_values(1)
+df_share_rides.head()
+
+# Filter to include only the rides that are not share rides
+# For modeling purposes, only include the ones that are not share rides, to get an accurate estimation of the fare
+
+df_3 = df_2.merge(df_share_rides, left_on=['taxi_id', 'trip_start_timestamp'], right_on=['taxi_id', 'trip_start_timestamp'], how='left')
+df_4 = df_3.loc[df_3.passengers == 1]
+df_4.shape
+~~~
+
+<img src="/images/github_share_rides.PNG" width="600">
+
+It shows that only about 1% are share rides.
 
 ### Identifying Premium vs Regular Taxi Services
 #### Clustering the Drivers
