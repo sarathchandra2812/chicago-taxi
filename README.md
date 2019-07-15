@@ -9,7 +9,11 @@ Predicting the fare serves two purposes: First, it gives the passengers an expec
 
 ## Data Exploration and Data Analysis
 
-The .ipynb file for data analysis： /exploratory-analysis/chicago-taxi-fare-exploratory-analysis.ipynb 
+The .ipynb file for data analysis is located in the exploratory-analysis folder:
+
+/exploratory-analysis/chicago-taxi-fare-exploratory-analysis.ipynb 
+
+<img src="/images/github_data_exploration.PNG" width="600">
 
 ### Data Sample
 1M rows of data were extracted from Big Query using SQL. Apparently, the more data the better. However, since the purpose of this project is to evaluate the methodology, we only used a subset of the data in order to cut down costs.  
