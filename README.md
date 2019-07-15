@@ -84,18 +84,18 @@ This step helps us understand:
 ~~~
 df.dtypes
 ~~~
-<img src="/images/github_dtype.PNG" width="600">
+<img src="/images/github_dtype.PNG" width="100">
 
 ~~~
 df.describe()
 ~~~
-<img src="/images/github_describe.PNG" width="600">
+<img src="/images/github_describe.PNG" width="100">
 
 ~~~
 # missing values
 print(df.isnull().sum())
 ~~~
-<img src="/images/github_missing_values.PNG" width="600">
+<img src="/images/github_missing_values.PNG" width="100">
 
 
 ### Explore the Relationships Among Metrics
@@ -141,7 +141,7 @@ df_4 = df_3.loc[df_3.passengers == 1]
 df_4.shape
 ~~~
 
-<img src="/images/github_share_rides.PNG" width="600">
+<img src="/images/github_share_rides.PNG" width="100">
 
 It shows that only about 1% are share rides.
 
