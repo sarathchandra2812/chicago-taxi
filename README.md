@@ -76,20 +76,22 @@ df = client.query(sql).to_dataframe()
 
 ### General Exploration of the Data
 This step helps us understand:
+
 - data types of each column
-- number of missing values for each column and across the dataset.
-- the statistical properties of the columns, such as its distribution. 
-- the outliers or implausible data, such as trips with duration of 15 minutes but distance of 1000+ miles which suggested that additional data filtering was needed. 
 
 ~~~
 df.dtypes
 ~~~
 <img src="/images/github_dtype.PNG" width="400">
 
+- the outliers or implausible data, such as trips with duration of 15 minutes but distance of 1000+ miles which suggested that additional data filtering was needed
+
 ~~~
 df.describe()
 ~~~
 <img src="/images/github_describe.PNG" width="400">
+
+- number of missing values for each column and across the dataset.
 
 ~~~
 # missing values
@@ -97,19 +99,16 @@ print(df.isnull().sum())
 ~~~
 <img src="/images/github_missing_values.PNG" width="400">
 
+- the statistical properties of the columns, such as its distribution. 
 
-### Explore the Relationships Among Metrics
-This step aimed to explore the relationships between different columns, including the relationships between different columns and fare.
+~~~
+# plot the distribution of fare
+sns.kdeplot(df_4.fare_dollars, shade=True)
+~~~
 
-Some feature engineering were used, such as extracting the hour of the day and day of the week from the pickup_datetime column. 
+<img src="/images/github_fare_distribution.PNG" width="400">
 
-Tools used included statistical testing, such as correlation analysis, and visualization, including scatterplots, time-lapse animation and geographical plots.
-
-Two conclusions came out of this analysis:
-1. The following factors were relevant in predicting the taxi fare: hour of the day when the trip started, day of the week, distance of the trip, locations of the pickup and drop off, where the trip started from or ended in an airport area.
-2. There seemed to be two lines of services: premium services and regular services, based on the rates. 
-
-Because of  the second conclusion, the next step was to figure out how to determine the type of services for each ride. 
+Most of the fare were under $2000 per trip. There are a few big numbers, which needs further explorations on if they are legit fare prices or bad data.
 
 
 ~~~
@@ -144,6 +143,54 @@ df_4.shape
 <img src="/images/github_share_rides.PNG" width="400">
 
 It shows that only about 1% are share rides.
+### Explore the Relationships Among Metrics
+This step aimed to explore the relationships between different columns, including the relationships between different columns and fare.
+
+Some feature engineering were used, such as extracting the hour of the day and day of the week from the pickup_datetime column. 
+
+Tools used included statistical testing, such as correlation analysis, and visualization, including scatterplots, time-lapse animation and geographical plots.
+
+~~~
+df_4['mmdd'] = df_4.trip_start_timestamp.map(lambda x: x.strftime('%m-%d'))
+fig = plt.figure()
+ax1 = df_4.pivot_table('unique_key', index='hour', columns='year', aggfunc=lambda x: len(x.unique())).plot(figsize=(8,5))
+plt.title('Number of Rides by Pickup Hour')
+~~~
+
+<img src="/images/github_rides_hour.PNG" width="400">
+
+~~~
+fig = plt.figure()
+ax1 = df_4.pivot_table('fare_dollars', index='hour', columns='year').plot(figsize=(8, 5))
+plt.title('Average Fare($) per Ride by Pickup Time')
+~~~
+
+<img src="/images/github_fare_hour.PNG" width="400">
+
+~~~
+fig = plt.figure()
+ax1 = df_4.pivot_table('trip_miles', index='hour', columns='year').plot(figsize=(8, 5))
+plt.title('Average Fare($) per Ride by Pickup Time')
+~~~
+
+<img src="/images/github_miles_hour.PNG" width="400">
+
+~~~
+fig = plt.figure()
+ax1 = df_4.pivot_table('unique_key', index='mmdd', columns='year', aggfunc=lambda x: len(x.unique())).plot(figsize=(16,8))
+plt.title('Number of Rides by Day')
+~~~
+
+<img src="/images/github_rides_day.PNG" width="400">
+
+
+Two conclusions came out of this analysis:
+1. The following factors were relevant in predicting the taxi fare: hour of the day when the trip started, day of the week, distance of the trip, locations of the pickup and drop off, where the trip started from or ended in an airport area.
+2. There seemed to be two lines of services: premium services and regular services, based on the rates. 
+
+Because of  the second conclusion, the next step was to figure out how to determine the type of services for each ride. 
+
+
 
 ### Identifying Premium vs Regular Taxi Services
 #### Clustering the Drivers
