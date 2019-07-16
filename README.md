@@ -460,6 +460,11 @@ Data that had mileage per hour (mph) of 90 or above, or the trip miles is above 
 ## Estimator: DNNLinearCombinedRegressor
 The estimator used is DNNLinearCombinedRegressor from the tensorflow.estimator. This built-in estimator fits the use of this model and make it easy to use.
 
+Why is a deep-and-wide network chosen?
+
+The advantage of a deep network with multiple layers is that they are good at abstracting features, learning the features between the raw input the the high-level output, while the advantage of a wide network is good at memorization. The current data calls for a model that is gooda t both memorization (of the days of the week, hour of the day, etc) and generalization of the pickup and dropoff locationns. Therefore, a deep-and-wide network was chosen.
+
+
 ## Tuning Hyperparametesr using Hypertune
 We used Hypertune to tune the number of nodes in each layer. The goal is to minimize the Root Mean Squared Error (RMSE). The parameters are set in the config.yaml file.
 
@@ -564,9 +569,7 @@ rmse = sqrt(mean_squared_error(results, test.fare_dollars))
 print('RMSE is: ', rmse)
 ~~~~
 
-
 <img src="/images/github_rmse.PNG" width="400">
-
 
 
 # Reference
