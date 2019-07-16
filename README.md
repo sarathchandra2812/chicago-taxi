@@ -267,6 +267,120 @@ The result of the clustering was merged with the original data.
 #### Identifying Companies that Provide Premium Services
 Analysis of the dollars per mile for each company showed a clear cut off among companies. Companies that had higher dollars per mile were marked in the column ‘is_luxury”.
 
+~~~
+aggregations = {
+    'unique_key':{
+        'rides': 'count'
+    },
+    'fare_dollars':{
+        'total_fare': 'sum'    
+    },
+    'trip_miles':{
+        'total_miles': 'sum'
+    }
+}
+
+by_company = df_4.groupby('company').agg(aggregations)
+by_company.columns = by_company.columns.get_level_values(1)
+by_company['miles_per_trip'] = by_company.total_miles/by_company.rides
+by_company['dollars_per_mile'] = by_company.total_fare/by_company.total_miles
+by_company.sort_values(['dollars_per_mile'], ascending = False).head()
+~~~
+
+<img src="/images/github_price_company.png" width="400">
+
+~~~
+#### It seems that Blue Ribbon Taxi Association Inc. mainly provides premium experience, at a large scale.
+##### Create one column, is_luxury, to mark the company that provides premium experience.
+df_4['is_luxury'] = np.where(df_4.company.isin(['Blue Ribbon Taxi Association Inc.', 'Suburban Dispatch LLC']), 1, 0)
+~~~
+
+Examine the trips provided by different taxi drivers
+
+~~~
+# Profiling the taxi_ids, showing miles_per_trip and dollars_per_mile for each taxi_id
+aggregations = {
+    'unique_key':{
+        'rides': 'count'
+    },
+    'fare_dollars':{
+        'total_fare': 'sum'    
+    },
+    'trip_miles':{
+        'total_miles': 'sum'
+    }
+}
+
+by_driver = df_4.groupby('taxi_id').agg(aggregations)
+by_driver.columns = by_driver.columns.get_level_values(1)
+by_driver['miles_per_trip'] = by_driver.total_miles/by_driver.rides
+by_driver['dollars_per_mile'] = by_driver.total_fare/by_driver.total_miles
+by_driver.sort_values(['dollars_per_mile'], ascending = False).head()
+~~~
+
+Use KMeans clustering to cluster the drivers into different groups.
+
+~~~
+# Standardize the data for clustering
+by_driver_standard = stats.zscore(by_driver[['dollars_per_mile']])
+~~~
+
+Two Clusters
+~~~
+# KMeans clustering
+k2 = KMeans(n_clusters = 2, random_state = 0).fit(by_driver_standard)
+by_driver['k2'] = k2.labels_
+by_driver.groupby(['k2']).mean()
+
+# Plot the clustering results
+plt.scatter(by_driver.dollars_per_mile, by_driver.miles_per_trip, c = -by_driver.k2)
+plt.xlabel('dollars per mile')
+plt.ylabel('miles per trip')
+plt.title('KMeans Results (k = 2)')
+~~~
+
+<img src="/images/github_kmeans.png" width="400">
+
+Three Clusters
+~~~
+k3 = KMeans(n_clusters = 3, random_state = 0).fit(by_driver_standard)
+by_driver['k3'] = k3.labels_
+by_driver.groupby(['k3']).mean()
+
+plt.scatter(by_driver.dollars_per_mile, by_driver.miles_per_trip, c = by_driver.k3)
+plt.xlabel('dollars per mile')
+plt.ylabel('miles per trip')
+plt.title('KMeans Results (k = 3)')
+~~~
+
+<img src="/images/github_kmeans_3.png" width="400">
+
+Four Clusters
+
+~~~
+# try four clusters
+k4 = KMeans(n_clusters = 4, random_state = 0).fit(by_driver_standard)
+by_driver['k4'] = k4.labels_
+by_driver.groupby(['k4']).mean()
+
+plt.scatter(by_driver.dollars_per_mile, by_driver.miles_per_trip, c = by_driver.k4)
+plt.xlabel('dollars per mile')
+plt.ylabel('miles per trip')
+plt.title('KMeans Results (k = 4)')
+~~~
+
+<img src="/images/github_kmeans_4.png" width="400">
+
+
+
+Combine the KMeans Clustering results with the original data
+
+~~~
+df_5 = df_4.merge(by_driver, left_on=['taxi_id'], right_on='taxi_id', how='left')
+df_5.head()
+~~~
+
+
 ##  Summary of Relevant Features
 The features below were generated:
 When extracting data from Big Query:
