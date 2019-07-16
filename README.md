@@ -201,7 +201,7 @@ def plot_data_points(longitude, latitude, data_frame, focus_point) :
 plot_data_points('pickup_longitude', 'pickup_latitude', df_4, 'unique_key')
 ~~~
 
-<img src="/images/github_github_rides_by_pickup.png" width="400">
+<img src="/images/github_rides_by_pickup.png" width="400">
 
 ~~~
 # plot of dropoff location
