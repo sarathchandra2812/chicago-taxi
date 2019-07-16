@@ -224,6 +224,8 @@ It seems that there are a few rides with a much longer trip miles and fare amoun
  
 Zooming in.
 
+<img src="/images/github_fare_miles_2.png" width="400">
+
 ~~~
 plt.scatter(df_4.trip_miles.loc[(df_4.trip_miles <=500) & (df_4.fare_dollars <=300)], 
             df_4.fare_dollars.loc[(df_4.trip_miles <=500) & (df_4.fare_dollars <=300)], 
