@@ -185,13 +185,71 @@ plt.title('Number of Rides by Day')
 
 <img src="/images/github_rides_day.png" width="400">
 
+Explores the locations of the rides
+~~~
+# This function plots the rides on a map of chicago
+def plot_data_points(longitude, latitude, data_frame, focus_point) :
+    cvs = ds.Canvas(plot_width=500, plot_height=400)
+    export  = partial(export_image, export_path = "export", background="black")
+    agg = cvs.points(data_frame, longitude, latitude, ds.count())
+    img = transfer_functions.shade(agg, cmap= hot, how='eq_hist')
+    image_xpt  =  transfer_functions.dynspread(img, threshold=0.5, max_px=4)
+    return export(image_xpt,"map")
+~~~
+~~~
+# pickup locations
+plot_data_points('pickup_longitude', 'pickup_latitude', df_4, 'unique_key')
+~~~
 
+<img src="/images/github_github_rides_by_pickup.png" width="400">
+
+~~~
+# plot of dropoff location
+plot_data_points('dropoff_longitude', 'dropoff_latitude', df_4, 'unique_key')
+~~~
+
+<img src="/images/github_rides_by_dropoff.png" width="400">
+
+Explore relationships between trip duration, trip length and fares
+
+~~~
+plt.scatter(df_4.trip_miles, df_4.fare_dollars, s = 1)
+plt.xlabel('Trip Miles')
+plt.ylabel('Fare($)')
+~~~
+
+<img src="/images/github_fare_miles.png" width="400">
+
+It seems that there are a few rides with a much longer trip miles and fare amount. The following plot will zoom in to the trip with 500 miles or less, and fare dollars below 300.
+ 
+Zooming in.
+
+~~~
+plt.scatter(df_4.trip_miles.loc[(df_4.trip_miles <=500) & (df_4.fare_dollars <=300)], 
+            df_4.fare_dollars.loc[(df_4.trip_miles <=500) & (df_4.fare_dollars <=300)], 
+            s = 1)
+plt.xlabel('Trip Miles')
+plt.ylabel('Fare($)')
+~~~ 
+ 
+Check how many rides have are 500 miles or less, and cost $300 or less.
+~~~
+df_4.trip_miles.loc[(df_4.trip_miles <=500) & (df_4.fare_dollars <=300)].shape
+~~~
+
+The results show (998528,). 99.7% of the trips were less than 500 miles and less than 300 dollars.
+
+    
 Two conclusions came out of this analysis:
 1. The following factors were relevant in predicting the taxi fare: hour of the day when the trip started, day of the week, distance of the trip, locations of the pickup and drop off, where the trip started from or ended in an airport area.
 2. There seemed to be two lines of services: premium services and regular services, based on the rates. 
 
-Because of  the second conclusion, the next step was to figure out how to determine the type of services for each ride. 
+In predicting whether a ride is a premium service, there are two hypothesis:
+(1) a certain company mostly provides one type of service;
+(2) a certain taxi_id always provides a premium or normal service.
+It is also possible that a driver provides premium services when affiliated with a certain company, but might provide normal services when affiliated with another company.
 
+The next steps is to explore which companies tend to provide premium services, and which drivers have provied premium services.
 
 
 ### Identifying Premium vs Regular Taxi Services
