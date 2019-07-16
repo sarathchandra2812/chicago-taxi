@@ -287,7 +287,7 @@ by_company['dollars_per_mile'] = by_company.total_fare/by_company.total_miles
 by_company.sort_values(['dollars_per_mile'], ascending = False).head()
 ~~~
 
-<img src="/images/github_price_company.png" width="400">
+<img src="/images/github_price_company.PNG" width="400">
 
 ~~~
 #### It seems that Blue Ribbon Taxi Association Inc. mainly provides premium experience, at a large scale.
@@ -372,13 +372,62 @@ plt.title('KMeans Results (k = 4)')
 <img src="/images/github_kmeans_4.png" width="400">
 
 
-
 Combine the KMeans Clustering results with the original data
 
 ~~~
 df_5 = df_4.merge(by_driver, left_on=['taxi_id'], right_on='taxi_id', how='left')
-df_5.head()
 ~~~
+
+Filter data for training.
+
+The purpose of the filtering is that certain data were considered bad data, becuase they were unrealistic or illegal or both, such as several hundred miles per hour, etc.  The purpose of the modeling is to predict the correct fare as a benchmark, so using the cleaned data is important.
+
+~~~
+# the upper limit of acceptable fare: 4 sd 
+fare_upper = df_5.describe().fare_dollars['mean'] + 4 * df_4.describe().fare_dollars['std']
+count = sum(df.fare_dollars > fare_upper)
+
+print ('The upper limit of fare (4sd) is: $', fare_upper, '.\n', count, 'rides are above the upper limit')
+~~~
+
+Results show that: "The upper limit of fare (4sd) is: $ 139.72892967657037 . 164 rides are above the upper limit".
+
+~~~
+# The upper limit of distance is arbitrary, because most trips are concentrated on the lower end, making the sd small
+distance_upper = 300
+
+count = sum(df.trip_miles > distance_upper)
+print (count, 'rides are 300 miles or longer.')
+~~~
+
+Results show that "89 rides are 300 miles or longer."
+
+~~~
+# Filter data based on on fare and trip miles, and mph, since we can't expect a future ride to exceed mph. It's illegal!
+df_5['mph'] = df_5.trip_miles/df_5.trip_minutes * 60
+df_6 = df_5.loc[(df_5.mph < 90) & (df_5.fare_dollars <= fare_upper) & (df_5.trip_miles <= distance_upper)]
+
+# plot 
+plt.scatter(df_6.trip_miles, df_6.fare_dollars, c = df_6.k2, s = 1, alpha = 0.5)
+plt.show()
+~~~
+
+<img src="/images/github_miles_dollars.png" width="400">
+
+Plot the trip milesa and fare dollars based on the two groups for Group 1.
+~~~
+plt.scatter(df_6.trip_miles.loc[df_6.k2 == 1], df_6.fare_dollars.loc[df_6.k2 == 1], s = 1, alpha = 0.5)
+plt.show()
+~~~
+
+<img src="/images/github_miles_dollars_1.png" width="400">
+
+~~~
+plt.scatter(df_6.trip_miles.loc[df_6.k2 == 0], df_6.fare_dollars.loc[df_6.k2 == 0], s = 1, alpha = 0.5)
+plt.show()
+~~~
+
+<img src="/images/github_miles_dollars_2.png" width="400">
 
 
 ##  Summary of Relevant Features
