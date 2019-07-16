@@ -470,15 +470,16 @@ We used Hypertune to tune the number of nodes in each layer. The goal is to mini
 
 **Why is RMSE chosen as a measure of the magnitude of error?**
 
-One common alternative of using RMSE is Mean Absolute Error (MAE). Both measure the magnitude of erros.
-One main difference is that RMSE places more weights on the larger errors, because of the sqaured errors. In the current model, large errors are particularly undesiable.
+One common alternative of using RMSE is Mean Absolute Error (MAE). Both measure the magnitude of errors.
+
+One main difference is that RMSE places more weights on the larger errors, because of the sqaured errors. 
 
 Suppose we want to predict the fare of 10 rides. 
-Model 1: the prediction is off by $1 for all 10 rides. 
-Model 2: the prediction is exactly the same for 9 rides, but $10 lower for the last one. 
+- Model 1: the prediction is off by $1 for all 10 rides. 
+- Model 2: the prediction is exactly the same for 9 rides, but $10 lower for the last one. 
 MAE would generate the same results, so the two models are considered to have the same performance; however, based on RMSE, Model 2 is worse.
 
-In our opinion, Model 2 to be worse because it is off by a big number. Taxi riders might be more tolerant to small variation of the predicted price, while a large difference would put them in a really bad mood. When it comes to money, we try to avoid big surprises. Therefore, we choose RMSE, which is more sensitive to large errors. 
+In the current model, large errors are particularly undesiable. Taxi riders might be more tolerant to small variation of the predicted price, while a large difference would put them in a really bad mood. When it comes to money, we try to avoid big surprises. Therefore, we choose RMSE, which penalizes large errors. 
 
 
 
