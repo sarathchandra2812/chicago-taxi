@@ -143,6 +143,8 @@ df_4.shape
 <img src="/images/github_share_rides.PNG" width="400">
 
 It shows that only about 1% are share rides.
+
+
 ### Explore the Relationships Among Metrics
 This step aimed to explore the relationships between different columns, including the relationships between different columns and fare.
 
@@ -157,7 +159,7 @@ ax1 = df_4.pivot_table('unique_key', index='hour', columns='year', aggfunc=lambd
 plt.title('Number of Rides by Pickup Hour')
 ~~~
 
-<img src="/images/github_rides_hour.PNG" width="400">
+<img src="/images/github_rides_hour.png" width="400">
 
 ~~~
 fig = plt.figure()
@@ -165,7 +167,7 @@ ax1 = df_4.pivot_table('fare_dollars', index='hour', columns='year').plot(figsiz
 plt.title('Average Fare($) per Ride by Pickup Time')
 ~~~
 
-<img src="/images/github_fare_hour.PNG" width="400">
+<img src="/images/github_fare_hour.png" width="400">
 
 ~~~
 fig = plt.figure()
@@ -173,7 +175,7 @@ ax1 = df_4.pivot_table('trip_miles', index='hour', columns='year').plot(figsize=
 plt.title('Average Fare($) per Ride by Pickup Time')
 ~~~
 
-<img src="/images/github_miles_hour.PNG" width="400">
+<img src="/images/github_miles_hour.png" width="400">
 
 ~~~
 fig = plt.figure()
@@ -181,7 +183,7 @@ ax1 = df_4.pivot_table('unique_key', index='mmdd', columns='year', aggfunc=lambd
 plt.title('Number of Rides by Day')
 ~~~
 
-<img src="/images/github_rides_day.PNG" width="400">
+<img src="/images/github_rides_day.png" width="400">
 
 
 Two conclusions came out of this analysis:
