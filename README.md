@@ -106,7 +106,7 @@ print(df.isnull().sum())
 sns.kdeplot(df_4.fare_dollars, shade=True)
 ~~~
 
-<img src="/images/github_fare_distribution.PNG" width="400">
+<img src="/images/github_fare_distribution.png" width="400">
 
 Most of the fare were under $2000 per trip. There are a few big numbers, which needs further explorations on if they are legit fare prices or bad data.
 
