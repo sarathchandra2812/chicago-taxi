@@ -429,6 +429,8 @@ plt.show()
 
 <img src="/images/github_miles_dollars_2.png" width="400">
 
+k = 2 provides a good balance between complexity and explanatory purposes 
+
 
 ##  Summary of Relevant Features
 The features below were generated:
