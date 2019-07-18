@@ -468,7 +468,7 @@ The advantage of a deep network with multiple layers is that they are good at ab
 ## Tuning Hyperparametesr using Hypertune
 We used Hypertune to tune the number of nodes in each layer. The goal is to minimize the **Root Mean Squared Error (RMSE)**. The parameters are set in the config.yaml file.
 
-**Why is RMSE chosen as a measure of the magnitude of error?**
+### Why is RMSE chosen as a measure of the magnitude of error?**
 
 One common alternative of using RMSE is Mean Absolute Error (MAE). Both measure the magnitude of errors.
 
@@ -481,18 +481,22 @@ MAE would generate the same results, so the two models are considered to have th
 
 In the current model, large errors are particularly undesiable. Taxi riders might be more tolerant to small variation of the predicted price, while a large difference would put them in a really bad mood. When it comes to money, we try to avoid big surprises. Therefore, we choose RMSE, which penalizes large errors. 
 
+### Parameters Tuned
+- number of layers
+- nodes in each layer by specifying: (1) The number of nodes in the 1st layer; (2) layer-wise reduction rate
+- learning rates
 
 
-The job for hypertuning is training taxi_fare_5. 
+The job for hypertuning is training ml_job21. 
 
 ~~~~
-!gcloud ml-engine jobs submit training taxi_fare_5\
-        --job-dir=gs://taxi_fare_4/job_folder/taxi_fare_model_5\
-        --runtime-version=1.10 \
-        --region=us-central1 \
-        --module-name=trainer.task \
-        --package-path=trainer \
-        --config=config.yaml
+!gcloud ml-engine jobs submit training ml_job21 \
+--job-dir=gs://taxi_exps_4/MLEngine/ml_job1 \
+--runtime-version=1.10 \
+--region=us-central1 \
+--module-name=trainer.task \
+--package-path=trainer \
+--config=config.yaml
 ~~~~
 
 The job shows the hyperparameters and the performance indicator: rmse.
@@ -516,11 +520,13 @@ import json
 
 profect_id_name = 'hackathon1-183523'
 project_id = 'projects/{}'.format(profect_id_name)
-job_name = 'taxi_fare_5'
+job_name = 'ml_job21'
 job_id = '{}/jobs/{}'.format(project_id, job_name)
 
-# Build the service and make a request
+# Build the service
 ml = discovery.build('ml', 'v1')
+
+# Execute the request and pass in the job id
 request = ml.projects().jobs().get(name=job_id).execute()
 
 # The best model
@@ -530,21 +536,23 @@ request['trainingOutput']['trials'][0]
 
 <img src="/images/github_best_results.PNG" width="600">
 
+### Summary of Hypertune Results
+
+The best model has a 2 layers, 206 for layer 1 and ceiling(206*0.68) = 150 for layer 2, learning rate of 0.00001 and batch size of 64.
 
 ## Deployment and Predictions
-The model used is taxi_fare_forecast_3, v4.
-The job name for the prediction is taxi_fare_pred_4
+The model used is taxi_fare_forecast_3, v5.
+The job name for the prediction is ml_job23
 
-The job for prediction is taxi_fare_model_45. 
 ~~~~
-!gcloud ml-engine jobs submit prediction taxi_fare_pred_4 \
+!gcloud ml-engine jobs submit prediction ml_job23 \
     --model=taxi_fare_forecast_3 \
     --input-paths=gs://taxi_fare_4/data/csv/test.csv \
-    --output-path=gs://taxi_fare_4/data/prediction_output/ \
+    --output-path=gs://taxi_exps_4/data/prediction_output/ \
     --region=us-central1 \
     --data-format=TEXT \
     --signature-name=predict \
-    --version=v4
+    --version=v5
 ~~~~
 
 
@@ -561,9 +569,7 @@ If we click the job, we will see:
 
 Download the results and transform it into a dataframe.
 
-~~~~
-! gsutil cp gs://taxi_fare_4/data/prediction_output/prediction.results-00000-of-00001 pred_results.json
-   
+~~~~   
 results_ls = []
 for line in open('pred_results.txt', 'r'):
     results_ls.append(json.loads(line))
