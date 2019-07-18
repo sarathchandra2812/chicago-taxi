@@ -210,6 +210,12 @@ plot_data_points('dropoff_longitude', 'dropoff_latitude', df_4, 'unique_key')
 
 <img src="/images/github_rides_by_dropoff.png" width="400">
 
+Explore the relations between pickup/dropoff locations and time of the day.
+
+![](images/pickups_by_hour.gif)
+
+![](images/dropoffs_by_hour.gif)
+
 Explore relationships between trip duration, trip length and fares
 
 ~~~
