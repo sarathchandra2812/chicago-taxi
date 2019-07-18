@@ -470,11 +470,20 @@ The estimator used is DNNLinearCombinedRegressor from the tensorflow.estimator. 
 
 The advantage of a deep network with multiple layers is that they are good at abstracting features, learning the features between the raw input the the high-level output, while the advantage of a wide network is good at memorization. The current data calls for a model that is gooda t both memorization (of the days of the week, hour of the day, etc) and generalization of the pickup and dropoff locationns. Therefore, a deep-and-wide network was chosen.
 
+**Deep and wide features**
+Wide features, including the sparse features for memory. 
+- Buckets of hours (e.g., 1am, 3pm)
+- Day of the week (e.g., Monday, Tuesday)
+- Whether the driver tend to provide premium services
+- Whether the company tend to provide premiumn services
+
+Deep features, including the embedded and cross features for genearlization.
+- Pickup and drop off locations
 
 ## Tuning Hyperparametesr using Hypertune
 We used Hypertune to tune the number of nodes in each layer. The goal is to minimize the **Root Mean Squared Error (RMSE)**. The parameters are set in the config.yaml file.
 
-### Why is RMSE chosen as a measure of the magnitude of error?**
+### Why is RMSE chosen as a measure of the magnitude of error?
 
 One common alternative of using RMSE is Mean Absolute Error (MAE). Both measure the magnitude of errors.
 
