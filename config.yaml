@@ -2,24 +2,35 @@ trainingInput:
   scaleTier: STANDARD_1
   hyperparameters:
     goal: MINIMIZE
-    hyperparameterMetricTag: rmse
+    hyperparameterMetricTag: rmse 
     enableTrialEarlyStopping: True
-    maxTrials: 12
+    maxTrials: 200
     maxParallelTrials: 4
     params:
-    - parameterName: hidden1
+    - parameterName: learning_rate
       type: DISCRETE
       discreteValues:
-          - 128
-          - 160
-          - 256
-    - parameterName: hidden2
+      - 0.000001
+      - 0.00001
+      - 0.001
+    - parameterName: first_layer_size
+      type: INTEGER
+      minValue: 100
+      maxValue: 300
+      scaleType: UNIT_LOG_SCALE
+    - parameterName: layer_reduction_fraction
+      type: DOUBLE
+      minValue: 0.1
+      maxValue: 1
+      scaleType: UNIT_LINEAR_SCALE
+    - parameterName: number_layers
+      type: INTEGER
+      minValue: 1
+      maxValue: 5
+      scaleType: UNIT_LOG_SCALE
+    - parameterName: batch_size
       type: DISCRETE
       discreteValues:
-          - 64
-          - 96
-    - parameterName: hidden3
-      type: DISCRETE
-      discreteValues:
-          - 16
-          - 32
+      - 32
+      - 64
+      - 128

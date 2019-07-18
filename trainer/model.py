@@ -72,17 +72,28 @@ def create_regressor(config, parameters):
         tf.feature_column.embedding_column(dropoff, parameters.nbuckets)
     ]
      
+    
+    layer = parameters.first_layer_size
+    lfrac = parameters.layer_reduction_fraction
+    nlayers = parameters.number_layers
+    h_units = [layer]
+    for _ in range(nlayers - 1):
+        h_units.append(math.ceil(layer * lfrac))
+        layer = h_units[-1]
+        
+        
     estimator = tf.estimator.DNNLinearCombinedRegressor(
         linear_feature_columns = wide_columns,
         dnn_feature_columns = deep_columns,
-        dnn_hidden_units = [parameters.hidden1, parameters.hidden2, parameters.hidden3],
+        dnn_hidden_units = h_units,
+        dnn_optimizer=tf.train.ProximalGradientDescentOptimizer(learning_rate=parameters.learning_rate),
         config=config
     )
     
-    def rmse(labels, predictions):
+    def root_mean_squared_error(labels, predictions):
         pred_values = predictions['predictions']
         return {'rmse': tf.metrics.root_mean_squared_error(labels, pred_values)}
 
-    estimator = tf.contrib.estimator.add_metrics(estimator, rmse)
+    estimator = tf.contrib.estimator.add_metrics(estimator, root_mean_squared_error)
 
     return estimator

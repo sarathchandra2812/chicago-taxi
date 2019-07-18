@@ -27,31 +27,39 @@ def initialize_params():
     Sets parameters
     """
     args_parser = argparse.ArgumentParser()
-
+     
+    args_parser.add_argument(
+        '--job-dir',
+        help='GCS location to write checkpoints and export models.',
+        required=False
+    )
     args_parser.add_argument(
         '--training_path',
         help='Location to training data.',
-        default='gs://taxi_fare_4/data/csv/train.csv' 
+        default='gs://taxi_fare_3/data/csv/train.csv' 
     )
     args_parser.add_argument(
         '--validation_path',
         help='Location to validation data.',
-        default='gs://taxi_fare_4/data/csv/eval.csv'
+        default='gs://taxi_fare_3/data/csv/eval.csv'
     )
     args_parser.add_argument(
-        '--hidden1',
-        help='Hidden Units 1',
-        default=128
+        '--first_layer_size',
+        help='First layer size.',
+        default=256,
+        type=int
     )
     args_parser.add_argument(
-        '--hidden2',
-        help='Hidden Units 2',
-        default=96
+        '--number_layers',
+        help='Number of hidden layers.',
+        default=3,
+        type=int
     )
     args_parser.add_argument(
-        '--hidden3',
-        help='Hidden Units 3',
-        default=16
+        '--layer_reduction_fraction',
+        help='Fraction to reduce layers in network.',
+        default=0.5,
+        type=float
     )
     args_parser.add_argument(
         '--learning_rate',
@@ -115,11 +123,14 @@ def main():
     """
     parameters = initialize_params()
     tf.logging.set_verbosity(tf.logging.INFO)
-        
+    model_dir = os.path.join('gs://taxi_exps_4/', json.loads(
+        os.environ.get('TF_CONFIG', '{}')).get('task', {}).get('trial', ''))
+    
     run_config = tf.estimator.RunConfig(
-        log_step_count_steps=500,
-        save_checkpoints_secs=60,
-        model_dir='gs://taxi_fare_4/log/'
+        log_step_count_steps=1000,
+        save_checkpoints_secs=120,
+        keep_checkpoint_max=3,
+        model_dir=model_dir
     )
     run_experiment(run_config, parameters)
 
