@@ -647,10 +647,9 @@ print('RMSE is: ', rmse)
 
 # Security Concerns
 
-Our data includes the Taxi ID, taxi company's names and the details of the taxi rides. Although the Taxi ID is anonymous, it might still raise some security concerns.
+Our data includes the Taxi ID, taxi company's names and the details of the taxi rides. The taxi IDs are anonymoused. The taxi drivers' info are not available. And the taxi riders' info does not exist in the dataset. 
 
-We believe Google has the highest level of security in protectding the clients' data. From data extraction to data prediction, we kept the data within the GCP platform. 
-
+Also, we kept the data within the GCP's secured infrastructure during the whole process. 
 
 # Reference
 1. Google Cloud Platform: https://github.com/GoogleCloudPlatform/professional-services/tree/master/examples/cloudml-energy-price-forecasting
