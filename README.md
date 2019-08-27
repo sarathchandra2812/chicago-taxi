@@ -511,6 +511,7 @@ Files generated after running the train_data_prep.py
 <img src="/images/data_prep_outcome.PNG" width="600">
 
 ## Preparing the eval data.
+
 File: eval_data_prep.py
 
 Executing this file, it does the following:
@@ -525,6 +526,12 @@ Executing this file, it does the following:
 Same as above, the parameters can be customized in the command line. The image below shows how to run the command.
 
 <img src="/images/eval_data_prep_command.PNG" width="800">
+
+## Preparing the prediction data.
+
+File: pred_data_prep.py
+
+The functions are similar to the eval_data_prep.py, except that the pred data does not have the 'fare_dollars' column. Also, it doens't have a header.
 
 
 ## Bucketization, Crossing Columns and Embedding Columns
