@@ -8,12 +8,35 @@ The goal of this project is to predict the fare price at the beginning of the ri
 Predicting the fare serves two purposes: First, it gives the passengers an expectation of the fare. Second, it prevents the meters’ mistakes in calculating the fare. In the dataset, we have seen impossible data, which could cause mistakes in fare calculations. For example,one trip was 15 minutes in duration but the distance traveled was 2000+ miles. The predicted fares could be used as a benchmark to evaluate the meters’ fares calculated to prevent mistakes. 
 
 ## Data Exploration and Data Analysis
+We offer two versions of data analysis files for the clients. 
 
-The .ipynb file for data analysis is located in the exploratory-analysis folder:
+### Version 1: an.py file with the data analysis functions.
+
+File Name: data_explore.py
+An examplar .ipynb file that loads the .py file and executes the prebuilt functions: run_data_prep.ipynb
+
+The client can load this file into their Jupyter Notebook using the line:
+~~~
+# Load the .py file
+%run data_explore.py
+~~~
+
+and then call the pre-built functions. For example, to get the general descriptive statistics, such as min and median, of the columns.
+~~~
+data_describe(df)
+~~~
+
+
+### Version 2: A .ipynb file showing the step by step Python scripts to explore the data.
+It is located in the exploratory-analysis folder:
 
 /exploratory-analysis/chicago-taxi-fare-exploratory-analysis.ipynb 
 
 <img src="/images/github_data_exploration.PNG" width="600">
+
+
+The info below is based on the Version 2 file. But the same functions can be achieved using the file in Version 1.
+
 
 ### Data Sample
 1M rows of data were extracted from Big Query using SQL. Apparently, the more data the better. However, since the purpose of this project is to evaluate the methodology, we only used a subset of the data in order to cut down costs.  
