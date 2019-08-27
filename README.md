@@ -486,7 +486,7 @@ Based on the exploratory analysis, we identified the features that suggest corre
 Data that had mileage per hour (mph) of 90 or above, or the trip miles is above 300, or the fare is above 4 standard deviations, were removed. 
 
 ## Data Preparation with Executable Code
-The executable code for prepping the data is data_prep.py.
+The executable code for prepping the data is train_data_prep.py.
 
 Executing this file, it does the following steps:
 - data extraction
@@ -501,11 +501,9 @@ The image below shows the exeution of the file.
 
 <img src="/images/data_prep_command.PNG" width="800">
 
-Files generated after running the data_prep.py
+Files generated after running the train_data_prep.py
 
-<img src="/images/data_prep_outcome.PNG" width="800">
-
-
+<img src="/images/data_prep_outcome.PNG" width="600">
 
 
 ## Estimator: DNNLinearCombinedRegressor
