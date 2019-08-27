@@ -645,8 +645,16 @@ print('RMSE is: ', rmse)
 
 <img src="/images/github_rmse.PNG" width="400">
 
+# Security Concerns
+
+Our data includes the Taxi ID, taxi company's names and the details of the taxi rides. Although the Taxi ID is anonymous, it might still raise some security concerns.
+
+We believe Google has the highest level of security in protectding the clients' data. From data extraction to data prediction, we kept the data within the GCP platform. 
+
 
 # Reference
 1. Google Cloud Platform: https://github.com/GoogleCloudPlatform/professional-services/tree/master/examples/cloudml-energy-price-forecasting
 
 2. Kaggle: https://www.kaggle.com/chicago/chicago-taxi-trips-bq
+
+3. The Security of Google Cloud: https://cloud.google.com/security/
