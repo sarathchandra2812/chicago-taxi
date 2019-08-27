@@ -21,7 +21,7 @@ The client can load this file into their Jupyter Notebook using the line:
 %run data_explore.py
 ~~~
 
-and then call the pre-built functions. For example, to get the general descriptive statistics, such as min and median, of the columns.
+Then call the pre-built functions. For example, to get the general descriptive statistics, such as min and median, of the columns.
 ~~~
 data_describe(df)
 ~~~
