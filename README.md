@@ -506,22 +506,17 @@ Files generated after running the train_data_prep.py
 <img src="/images/data_prep_outcome.PNG" width="600">
 
 
+## Bucketization, Crossing Columns and Embedding Columns
+We bucketized the hour of the day, as well as the pick up and dropoff latitude and longitude. This is because these features because they are fundamentally categorical features when it comes to their impact on the taxi fare. Also, for the longitude and latitude data, we do not need the extra small level of granularity.
+
+We crossed columns the pick up and drop off latitude and longitude. This is becuase the it's the joint of the pick up and drop off, latitude and longitude, that together determine the fare.
+
+We embedded the columns to group them together.
+
 ## Estimator: DNNLinearCombinedRegressor
 The estimator used is DNNLinearCombinedRegressor from the tensorflow.estimator. This built-in estimator fits the use of this model and make it easy to use.
 
-**Why is a deep-and-wide network chosen?**
-
-The advantage of a deep network with multiple layers is that they are good at abstracting features, learning the features between the raw input the the high-level output, while the advantage of a wide network is good at memorization. The current data calls for a model that is gooda t both memorization (of the days of the week, hour of the day, etc) and generalization of the pickup and dropoff locationns. Therefore, a deep-and-wide network was chosen.
-
-**Deep and wide features**
-Wide features, including the sparse features for memory. 
-- Buckets of hours (e.g., 1am, 3pm)
-- Day of the week (e.g., Monday, Tuesday)
-- Whether the driver tend to provide premium services
-- Whether the company tend to provide premiumn services
-
-Deep features, including the embedded and cross features for genearlization.
-- Pickup and drop off locations
+We have tested XGBoost and DNNRegressor, but this model has the best performance. Our original thought was to pick the best performing model based on the rmse, becuase this is a Kaggle project. We agree with the feedback that this model is more complicated and more difficult to understand. In the future, when we are facing such as choice in a client work, we would communicate the pros and cons to the client and make a joint decision.
 
 ## Tuning Hyperparametesr using Hypertune
 We used Hypertune to tune the number of nodes in each layer. The goal is to minimize the **Root Mean Squared Error (RMSE)**. The parameters are set in the config.yaml file.
