@@ -462,17 +462,15 @@ plt.show()
 k = 2 provides a good balance between complexity and explanatory purposes 
 
 
-##  Summary of Relevant Features
-The features below were generated:
-When extracting data from Big Query:
-- Transforming the pickup and drop off data time from UTC to Chicago local
-- Extracting the date, hour of the day, day of the week, month and year from the pickup datetime
-- Calculating the duration of the trip using beginning and ending time
-- Marking trips that started or ended in an airport based on the community areas
-
-In Jupyter Notebook:
-- Marking the service level, premium vs regular, of each driver based on the clustering results
-- Marking the service level of the company based on the dollars per mile of the trips provided in the past
+##  Feature Selection
+Based on the exploratory analysis, we identified the features that suggest correlations with the fare prices. The features include:
+- pickup_latitude
+- pickup_longitude
+- dropoff_latitude
+- dropoff_longitude
+- weekday (day of the week)
+- is_luxury(if the company tend to provide premium services)
+- k2(cluster of the driver based on the clustering results)
 
 # Modeling
 
@@ -486,6 +484,11 @@ In Jupyter Notebook:
 - k2(cluster of the driver based on the clustering results)
 
 Data that had mileage per hour (mph) of 90 or above, or the trip miles is above 300, or the fare is above 4 standard deviations, were removed. 
+
+## Data Preparation
+The executable code for prepping the data is called train_data_prep.py.
+<img src="/images/data_prep_command.PNG" width="600">
+
 
 ## Estimator: DNNLinearCombinedRegressor
 The estimator used is DNNLinearCombinedRegressor from the tensorflow.estimator. This built-in estimator fits the use of this model and make it easy to use.
