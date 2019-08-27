@@ -486,14 +486,19 @@ Based on the exploratory analysis, we identified the features that suggest corre
 Data that had mileage per hour (mph) of 90 or above, or the trip miles is above 300, or the fare is above 4 standard deviations, were removed. 
 
 ## Data Preparation with Executable Code
-The executable code for prepping the data is train_data_prep.py.
+The executable code for prepping the training and eval data are train_data_prep.py and eval_data_prep.py.
+
+## Preparing the training data. 
+
+File: train_data_prep.py
 
 Executing this file, it does the following steps:
 - data extraction
 - data cleaning
 - clustering the drivers and match the cluster ID to the rides
-- split the data file to train and eval for building the model
-- upload the files to the designated Google Cloud Storage bucket.
+- save the clustering results to GCS bucket.
+- clearn data and select columns
+- upload the files to the designated GCS bucket.
 
 The parameters in this file can be changed in the command line, such as 'bucket_name'. 
 
@@ -504,6 +509,22 @@ The image below shows the exeution of the file.
 Files generated after running the train_data_prep.py
 
 <img src="/images/data_prep_outcome.PNG" width="600">
+
+## Preparing the eval data.
+File: eval_data_prep.py
+
+Executing this file, it does the following:
+- data extraction
+- data clearning
+- extract the clustering results from the GCS bucket. 
+- match the rides data with the cluster data, based on taxi id
+- find the cluster for the taxi id. If the taxi id doesn't exist in the clustering results, assign the most popular cluster id
+- clearn data and select columns
+- upload the file to the designated GCS bucket.
+
+Same as above, the parameters can be customized in the command line. The image below shows how to run the command.
+
+<img src="/images/eval_data_prep_command.PNG" width="800">
 
 
 ## Bucketization, Crossing Columns and Embedding Columns
