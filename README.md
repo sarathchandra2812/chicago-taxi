@@ -492,7 +492,7 @@ Executing this file, it does the following steps:
 - data extraction
 - data cleaning
 - clustering the drivers and match the cluster ID to the rides
-- split the data file to train and test for building the model
+- split the data file to train and eval for building the model
 - upload the files to the designated Google Cloud Storage bucket.
 
 The parameters in this file can be changed in the command line, such as 'bucket_name'. 
