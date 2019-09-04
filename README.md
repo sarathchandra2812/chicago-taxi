@@ -683,7 +683,7 @@ We will keep our data, data pipeline and analytics work in the Google Cloud Plat
 ## Prevent Data Loss
 We will work with our client to utilize Google's Cloud Data Loss Prevention service (https://cloud.google.com/dlp/)
 
-## Acces Management
+## Access Management
 We will use Google Cloud's Cloud Identity and Access Management to control users' access to data, and limit the data access only to the personel who need it.  https://cloud.google.com/iam/
 
 ## Responsible AI
