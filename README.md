@@ -680,7 +680,7 @@ We are extra careful when working with clients' data, especially when PII data i
 We will keep our data, data pipeline and analytics work in the Google Cloud Platform, the most trustworthy and trusted cloud platform.
 (https://cloud.google.com/security/infrastructure/)
 
-## Prevent Data Loss
+## Data Loss Prevention
 We will work with our client to utilize Google's Cloud Data Loss Prevention service (https://cloud.google.com/dlp/)
 
 ## Access Management
