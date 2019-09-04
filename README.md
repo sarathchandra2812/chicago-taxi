@@ -674,10 +674,17 @@ print('RMSE is: ', rmse)
 <img src="/images/github_rmse.PNG" width="400">
 
 # Security Concerns
+We are extra careful when working with clients' data, especially when PII data is involved. Aside form masking the taxiIDs with anonymous IDs for the purpose of this project, we have the following considerations:
 
-Our data includes the Taxi ID, taxi company's names and the details of the taxi rides. The taxi IDs are anonymoused. The taxi drivers' info are not available. And the taxi riders' info does not exist in the dataset. 
+## Prevent Data Loss
+We will work with our client to utilize Google's Cloud Data Loss Prevention service (https://cloud.google.com/dlp/)
 
-Also, we kept the data within the GCP's secured infrastructure during the whole process. 
+## Acces Management
+We will use Google Cloud's Cloud Identity and Access Management to control users' access to data, and limit the data access only to the personel who need it.  https://cloud.google.com/iam/
+
+## Responsible AI
+We will be fully compliant with our company's Respnosible AI requirements, and only use data in the ethical ways. 
+
 
 # Reference
 1. Google Cloud Platform: https://github.com/GoogleCloudPlatform/professional-services/tree/master/examples/cloudml-energy-price-forecasting
