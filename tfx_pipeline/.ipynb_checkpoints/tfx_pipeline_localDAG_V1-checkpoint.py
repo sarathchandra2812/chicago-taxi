@@ -40,7 +40,7 @@ from tfx.types import Channel
 from tfx.types.standard_artifacts import Model
 from tfx.types.standard_artifacts import ModelBlessing
 
-_pipeline_name = 'chicago_taxi_beam'
+_pipeline_name = 'chicago_taxi_localDag_v1'
 
 # This example assumes that the taxi data is stored in ~/taxi/data and the
 # taxi utility function is in ~/taxi.  Feel free to customize this as needed.
@@ -187,7 +187,7 @@ def _create_pipeline(pipeline_name: str, pipeline_root: str, data_root: str,
 # To run this pipeline from the python CLI:
 #   $python taxi_pipeline_beam.py
 if __name__ == '__main__':
-  absl.logging.set_verbosity(absl.logging.INFO)
+  absl.logging.set_verbosity(absl.logging.DEBUG)
 
   LocalDagRunner().run(
       _create_pipeline(

@@ -183,12 +183,16 @@ def _build_estimator(config, hidden_units=None, warm_start_from=None):
               _transformed_names(_CATEGORICAL_FEATURE_KEYS),
               _MAX_CATEGORICAL_FEATURE_VALUES)
   ]
-  return tf.estimator.DNNLinearCombinedClassifier(
+  estimator = tf.estimator.DNNLinearCombinedRegressor(
       config=config,
       linear_feature_columns=categorical_columns,
       dnn_feature_columns=real_valued_columns,
       dnn_hidden_units=hidden_units or [100, 70, 50, 25],
-      warm_start_from=warm_start_from)
+      dnn_optimizer = tf.keras.optimizers.SGD(learning_rate=0.000001),
+      # warm_start_from=warm_start_from
+  )
+  print("_"*100)
+  return estimator
 
 
 def _example_serving_receiver_fn(tf_transform_output, schema):
