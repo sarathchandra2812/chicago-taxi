@@ -99,7 +99,7 @@ def generate_sql(bq_table):
         FROM `"""
      
     sql2 = """` WHERE 
-        fare > 0 and fare is not null and trip_miles > 0 and trip_miles is not null
+        fare > 0  and fare is not null and trip_miles > 0 and trip_miles is not null
         ORDER BY 
         RAND()
         LIMIT 150000)
