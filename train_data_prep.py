@@ -27,7 +27,7 @@ def initialize_params():
     args_parser.add_argument(
         '--projectid',
         help='Project ID',
-        default='hackathon1-183523'
+        default='sarath-5'
     )
     args_parser.add_argument(
         '--job-dir',
@@ -37,7 +37,7 @@ def initialize_params():
     args_parser.add_argument(
         '--bucket_name',
         help='Name of the Google Cloud Storage bucket',
-        default='taxi_fare_pp1' 
+        default='sarath-5-chicago-taxi' 
     )
     args_parser.add_argument(
         '--training_file_name',

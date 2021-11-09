@@ -11,7 +11,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.model_selection import train_test_split, GridSearchCV, TimeSeriesSplit
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.externals import joblib
+import joblib
 from scipy import stats
 from functools import partial
 from io import StringIO # if going with no saving csv file
@@ -26,7 +26,7 @@ def initialize_params():
     args_parser.add_argument(
         '--projectid',
         help='Project ID',
-        default='hackathon1-183523'
+        default='sarath-5'
     )
     args_parser.add_argument(
         '--job-dir',
@@ -36,7 +36,7 @@ def initialize_params():
     args_parser.add_argument(
         '--bucket_name',
         help='Name of the Google Cloud Storage bucket',
-        default='taxi_fare_pp1' 
+        default='sarath-5-chicago-taxi' 
     )
     args_parser.add_argument(
         '--drivers_file_name',
@@ -162,13 +162,13 @@ def check_bucket(storage_client, bucket_name):
     except: 
         print ('The bucket ' + bucket_name + ' did not exist yet. Please enter the correct one. Thanks.')
 
-def save_gcs(df, ds_client, gcs_path):
+def save_gcs(df, gcs_path):
     '''
     save the created data set as a csv file in the designated google cloud storage bucket
     '''
-    df.to_csv(df, gcs_path)
+    df.to_csv(gcs_path,index=False)
     
-def get_gcs(ds_client, gcs_path):
+def get_gcs(gcs_path):
     '''
     Reads a file from the GCS bucket
     '''

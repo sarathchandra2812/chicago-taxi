@@ -12,7 +12,7 @@
 This file sets the parameters and runs the model.
 """
 
-import sys; sys.argv=['']; del sys
+#import sys; sys.argv=['']; del sys
 
 import argparse, json, os
 import numpy as np
@@ -23,26 +23,71 @@ import model
 import datetime
 
 
-def initialize_params():
+
+def run_experiment(run_config, parameters):
+    """
+    This funtion runs the tensorflow model.
+    """
+    estimator = model.create_regressor(
+        config = run_config, 
+        parameters=parameters)
+    train_spec = inputs.train_spec(
+        parameters.training_path,
+        parameters.batch_size,
+        parameters.max_steps)
+    eval_spec = inputs.eval_spec(
+        parameters.validation_path,
+        parameters.eval_batch_size)
+    tf.estimator.train_and_evaluate(
+        estimator,
+        train_spec,
+        eval_spec
+    )
+
+
+def main():
+    """
+    This main function executes the job.
+    """
+    
+    
     """
     Sets parameters
     """
     args_parser = argparse.ArgumentParser()
-     
     args_parser.add_argument(
-        '--job-dir',
-        help='GCS location to write checkpoints and export models.',
+        "-p", "--predict", 
+        required=True, 
+        help="Is it a prediction?")
+    args_parser.add_argument(
+        '--predict_file_name', 
+        help='Path to the prediction file', 
         required=False
+    )
+    args_parser.add_argument(
+        '--output_folder',
+        help='GCS location to write checkpoints and export models.',
+        default='gs://sarath-5-chicago-taxi/'
+    )
+    args_parser.add_argument(
+        '--job_dir',
+        help='Where the latest model sits.',
+        default='gs://sarath-5-chicago-taxi/latest_model'
     )
     args_parser.add_argument(
         '--training_path',
         help='Location to training data.',
-        default='gs://taxi_fare_pp1/data/csv/train.csv' 
+        default='gs://sarath-5-chicago-taxi/data/csv/train.csv' 
     )
     args_parser.add_argument(
         '--validation_path',
         help='Location to validation data.',
-        default='gs://taxi_fare_pp1/data/csv/eval.csv'
+        default='gs://sarath-5-chicago-taxi/data/csv/eval.csv'
+    )
+    args_parser.add_argument(
+        '--pred_path',
+        help='Location to prediction data.',
+        default='gs://sarath-5-chicago-taxi/data/csv/pred.csv'
     )
     args_parser.add_argument(
         '--first_layer_size',
@@ -92,51 +137,53 @@ def initialize_params():
         default=20,
         type=int
     )
-    return args_parser.parse_args()
 
-
-
-def run_experiment(run_config, parameters):
-    """
-    This funtion runs the tensorflow model.
-    """
-    estimator = model.create_regressor(
-        config = run_config, 
-        parameters=parameters)
-    train_spec = inputs.train_spec(
-        parameters.training_path,
-        parameters.batch_size,
-        parameters.max_steps)
-    eval_spec = inputs.eval_spec(
-        parameters.validation_path,
-        parameters.eval_batch_size)
-
-    tf.estimator.train_and_evaluate(
-        estimator,
-        train_spec,
-        eval_spec
-    )
-
-
-def main():
-    """
-    This main function executes the job.
-    """
-    parameters = initialize_params()
-    tf.logging.set_verbosity(tf.logging.INFO)
+    parameters = args_parser.parse_args()   
+    
+    # tf.compat.v1.logging.set_verbosity(tf.logging.INFO)
     
     folder_timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     
-    model_dir = os.path.join('gs://taxi_exps_4/', folder_timestamp, json.loads(
-        os.environ.get('TF_CONFIG', '{}')).get('task', {}).get('trial', ''))
-    
-    run_config = tf.estimator.RunConfig(
-        log_step_count_steps=1000,
-        save_checkpoints_secs=120,
-        keep_checkpoint_max=3,
-        model_dir=model_dir
-    )
-    run_experiment(run_config, parameters)
+    if parameters.predict=="True":
+        print ('--------Predictions----------')
+        data = pd.read_csv(parameters.pred_path)
+        data = data.head()
+        x_test = data[['hour', 'weekday', 'pickup_latitude', 'pickup_longitude', 'dropoff_latitude', 'dropoff_longitude', 'k2', 'is_luxury']]
+        y = data['fare_dollars']
+        
+        run_config = tf.estimator.RunConfig()
+        model_dir=parameters.job_dir
+        run_config = run_config.replace(model_dir=model_dir)
+
+        estimator = model.create_regressor(
+            config = run_config, 
+            parameters=parameters)
+ 
+        
+        pred_input_func = tf.estimator.inputs.pandas_input_fn(x = x_test, shuffle = False)
+
+        predictions = estimator.predict(pred_input_func)
+        
+        for result in predictions:
+            print (result)
+    elif parameters.predict=="False":
+        
+        print ('--------Training---------')
+
+        # model_dir = os.path.join(parameters.output_folder, folder_timestamp, json.loads(os.environ.get('TF_CONFIG', '{}')).get('task', {}).get('trial', ''))
+        model_dir = parameters.job_dir
+        
+        run_config = tf.estimator.RunConfig(
+            log_step_count_steps=1000,
+            save_checkpoints_secs=120,
+            keep_checkpoint_max=3,
+            model_dir=model_dir
+        )
+        print ('--------Training---------')
+        
+        run_experiment(run_config, parameters)
+        print ('--------Woohoooo  Training Completed---------')
+        
 
 if __name__ == '__main__':
     main()

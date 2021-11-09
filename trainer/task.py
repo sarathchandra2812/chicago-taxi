@@ -67,27 +67,27 @@ def main():
     args_parser.add_argument(
         '--output_folder',
         help='GCS location to write checkpoints and export models.',
-        default='gs://taxi_exps_4/'
+        default='gs://sarath-5-chicago-taxi/'
     )
     args_parser.add_argument(
         '--job_dir',
         help='Where the latest model sits.',
-        default='gs://taxi_exps_4/2020-05-24_04-16-25'
+        default='gs://sarath-5-chicago-taxi/latest_model'
     )
     args_parser.add_argument(
         '--training_path',
         help='Location to training data.',
-        default='gs://taxi_fare_pp1/data/csv/train.csv' 
+        default='gs://sarath-5-chicago-taxi/data/csv/train.csv' 
     )
     args_parser.add_argument(
         '--validation_path',
         help='Location to validation data.',
-        default='gs://taxi_fare_pp1/data/csv/eval.csv'
+        default='gs://sarath-5-chicago-taxi/data/csv/eval.csv'
     )
     args_parser.add_argument(
         '--pred_path',
         help='Location to prediction data.',
-        default='gs://taxi_fare_pp1/data/csv/pred.csv'
+        default='gs://sarath-5-chicago-taxi/data/csv/pred.csv'
     )
     args_parser.add_argument(
         '--first_layer_size',
@@ -140,7 +140,7 @@ def main():
 
     parameters = args_parser.parse_args()   
     
-    tf.logging.set_verbosity(tf.logging.INFO)
+    # tf.compat.v1.logging.set_verbosity(tf.logging.INFO)
     
     folder_timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     
@@ -170,7 +170,8 @@ def main():
         
         print ('--------Training---------')
 
-        model_dir = os.path.join(parameters.output_folder, folder_timestamp, json.loads(os.environ.get('TF_CONFIG', '{}')).get('task', {}).get('trial', ''))
+        # model_dir = os.path.join(parameters.output_folder, folder_timestamp, json.loads(os.environ.get('TF_CONFIG', '{}')).get('task', {}).get('trial', ''))
+        model_dir = parameters.job_dir
         
         run_config = tf.estimator.RunConfig(
             log_step_count_steps=1000,
@@ -178,9 +179,11 @@ def main():
             keep_checkpoint_max=3,
             model_dir=model_dir
         )
+        print ('--------Training---------')
         
         run_experiment(run_config, parameters)
-
+        print ('--------Woohoooo  Training Completed---------')
+        
 
 if __name__ == '__main__':
     main()
