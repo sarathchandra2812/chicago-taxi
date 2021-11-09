@@ -11,7 +11,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.model_selection import train_test_split, GridSearchCV, TimeSeriesSplit
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.externals import joblib
+import joblib
 from scipy import stats
 from functools import partial
 from io import StringIO # if going with no saving csv file
