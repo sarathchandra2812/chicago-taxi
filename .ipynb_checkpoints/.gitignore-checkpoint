@@ -1,0 +1,2 @@
+./tfx_pipeline/serving_model/
+./tfx_pipeline/tfx_localDag/
